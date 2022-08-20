@@ -1,0 +1,212 @@
+
+#include <iostream>
+using namespace std;
+
+class ListElement {
+	ListElement * next;
+	ListElement * prev;
+	friend class Lists;
+public:
+	ListElement();
+	void print() const;
+	void input();
+	ListElement* createElement();
+	ListElement * getNext() const;
+	ListElement * getPrev() const;
+
+};
+
+
+
+class Lists {
+	ListElement * start;
+	ListElement * end;
+public:
+	Lists();
+	~Lists();
+	ListElement * getStart() const;
+	ListElement * getEnd() const;
+
+	void clear(); // Delete/Free all elements
+	void print() const; // output all elements.
+	void remove(ListElement *rem); // remove one element
+	void add(ListElement *neu, ListElement * whereto=0); // add a new one behind whereto
+};
+
+
+
+//definition of ListElement methods :
+ListElement::ListElement()
+{
+	next = prev = 0;
+}
+
+
+void ListElement::print() const
+{
+	cout << "An element at address: "<<this<<endl;
+}
+
+void ListElement::input()
+{
+
+}
+
+ListElement * ListElement::getNext() const
+{
+	return next;
+}
+
+ListElement * ListElement::getPrev() const
+{
+	return prev;
+}
+
+ListElement* ListElement::createElement()
+{
+    ListElement *  ptr =new ListElement;
+    return ptr;
+
+}
+
+
+
+
+
+
+
+//Definition of Lists methods:
+
+
+Lists :: Lists()
+{
+start = end = 0;
+}
+
+ListElement* Lists::getStart() const
+{
+	return start;
+}
+
+ListElement* Lists::getEnd() const
+{
+	return end;
+}
+
+
+
+ Lists :: ~ Lists()
+{
+
+}
+
+void Lists :: clear()
+{
+   ListElement * current = start;
+   ListElement * save;
+   while(current != 0)
+   {
+       save = current->next;
+       save->prev = 0;
+       delete current;
+       current=save;
+   }
+   start=end=0;
+}
+
+
+
+void Lists :: print() const
+{
+   ListElement * temp=start;
+   while(temp != 0)
+   {
+      temp->print();
+      temp = temp ->next;
+   }
+
+}
+void Lists :: remove(ListElement *rem)
+{
+   if (rem->prev == 0)
+   {
+      rem->next->prev =0;
+      start=rem->next;
+   }
+
+   else if (rem == end)
+   {
+        rem->prev->next=0;
+        end=rem->prev;
+   }
+
+
+   else
+   {
+       rem->prev->next= rem->next;
+       rem->next->prev=rem->prev;
+   }
+
+   delete rem ;
+
+}
+
+
+void Lists :: add(ListElement *neu, ListElement *whereto)
+{
+if (whereto == 0)
+{
+ start=neu;
+  end=neu;
+}
+
+else if (whereto==end)
+{
+    neu->prev= whereto;
+    whereto->next= neu;
+    end=neu;
+}
+else
+{
+  neu->next=whereto->next;
+  whereto->next->prev=neu;
+  whereto->next=neu;
+  neu->prev=whereto;
+
+}
+
+}
+
+
+
+
+int main()
+{
+
+
+ListElement l;
+Lists d;
+cout<<"enter the number of list elements to be added at the end:"<<endl;
+int n;
+cin>>n;
+for(int i=0;i<n;i++)
+{
+d.add(l.createElement(),d.getEnd());
+}
+
+d.print();
+cout<<endl;
+
+cout<<endl<<"adding a node in between the list"<<endl;
+d.add(l.createElement(),d.getStart());
+d.print();
+cout<<endl;
+
+cout<<"deleting the node before the end node"<<endl;
+d.remove(d.getEnd()->getPrev() );
+d.print();
+cout<<endl;
+
+cout<<"Clearing the list";
+d.clear();
+}
