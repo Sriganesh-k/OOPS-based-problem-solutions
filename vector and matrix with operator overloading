@@ -1,0 +1,190 @@
+#include <iostream>
+
+using namespace std;
+class vec{
+   
+    public:
+    double* v ;
+   friend class mat;
+    vec()
+    {
+        v=new double[2];
+    }
+    void input(int c)
+    {
+        short int i;
+	for (i=0; i<c; i++)
+		cin>>v[i];
+    }
+    void output(int c)
+    {
+        short int i;
+        for (i=0; i<c; i++)
+        {
+		cout<<v[i]; 
+		cout<<" ";
+        }
+    } 
+     void vec_element(int i)
+     {
+         cout<<v[i];
+     }
+};
+class mat{
+    vec* matrix;
+    int rows;
+    int column;
+    public:
+    vec operator[](int i) ;    
+    friend istream & operator >>(istream &in , const mat& b) ;
+    friend ostream & operator <<(ostream &out , const mat& b) ;
+    //parameterised constructor 
+    
+     mat(int r,int c)
+    {
+        rows=r;
+        column=c;
+        matrix=new vec[rows];
+    }
+    
+    
+    //input function
+    void in()
+    {
+        cout<<"enter the matrix elements:"<<endl;
+        for(int i=0;i<rows;i++)
+        {
+                 matrix[i].input(column);   
+             
+        }
+    }
+    //output function 
+    void out()
+    {
+        cout<<"the matrix elements are:"<<endl;
+        for(int i=0;i<rows;i++)
+        {
+                 matrix[i].output(column);
+                 cout<<endl;
+             
+        }
+    }
+
+ //calculation
+mat operator +(const mat& b) 
+{
+short int i,j;
+mat res(rows,column);
+for (int i = 0 ; i < rows ; i++) 
+{
+    for(int j=0; j<column ; j++)
+          res.matrix[i].v[j]=matrix[i].v[j] + b.matrix[i].v[j];
+}
+    
+return res;
+}
+
+
+//assignment operator 
+
+   void operator =(const mat& b) 
+{
+short int i,j;
+for (int i = 0 ; i < rows; i++) 
+{
+    for(int j=0;j<column;j++)
+          matrix[i].v[j] = b.matrix[i].v[j];
+}
+}
+
+   
+};
+
+
+
+//index operator 
+vec mat::operator[](int i)     
+{
+     return matrix[i];
+     
+}
+
+
+//input operator
+ istream & operator >>(istream &in , const mat& b) 
+{
+   short int i,j;
+   
+   cout<<"enter the matrix elements"<<endl;
+   for (int i = 0 ; i < b.rows; i++) 
+{
+    for(int j=0;j<b.column;j++)
+    {
+        double x;
+        cin>>x;
+          b.matrix[i].v[j]=x;
+    }
+}
+   
+   return in;
+}
+
+
+//output operator 
+ostream & operator <<(ostream &out , const mat& b) 
+{
+   short int i,j;
+   
+   cout<<"the matrix elements are"<<endl;
+   for (int i = 0 ; i < b.rows; i++) 
+{
+    for(int j=0;j<b.column;j++)
+    {
+       
+         cout<< b.matrix[i].v[j]<<" ";
+    }
+    cout<<endl;
+}
+   
+   return out;
+}
+
+
+
+
+
+int main()
+{
+    cout<<"enter the no of rows:";
+    int r;
+    cin>>r;
+    cout<<"enter the no of column:";
+    int c;
+    cin>>c;
+    
+    mat max(r,c);
+    max.in();
+    max.out();
+    
+    mat m(r,c);
+    cout<<"**input operator**"<<endl;
+    cin>>m;
+    cout<<"**output operator**"<<endl;
+    cout<<m;
+    
+    cout<<"addition operator:"<<endl;
+    mat add=max+m;
+    cout<<add;
+    
+    
+    cout<<"assignment operator"<<endl;
+    add=max;
+    cout<<add;
+    
+    cout<<"enter the row and column index for index operator"<<endl;
+    cin>>r;
+    cin>>c;
+    vec x=max[r];
+    x.vec_element(c);
+}
+
